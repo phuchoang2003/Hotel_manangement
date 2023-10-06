@@ -1,17 +1,19 @@
+// Room.h
 #pragma once
 #include <string>
 
 class Room {
 private:
-    std::string type;
-    double price;
-    bool is_available;
+    int id;
+    std::string roomType;
+    bool isBooked;
 
 public:
-    Room(const std::string& type, double price);
-    bool book();
-    void release();
+    Room(int id, const std::string& type);
+
+    int getID() const;
     bool available() const;
     std::string getType() const;
-    double getPrice() const;
+    std::string getBookingStatus() const;
+    void book();
 };

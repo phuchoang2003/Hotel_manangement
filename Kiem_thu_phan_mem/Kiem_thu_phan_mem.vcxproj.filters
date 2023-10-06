@@ -39,6 +39,9 @@
     <ClCompile Include="main_function.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Notification.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Room.h">
@@ -62,5 +65,10 @@
     <ClInclude Include="main_functions.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Notification.h">
+      <Filter>Header Files</Filter>
+    </None>
   </ItemGroup>
 </Project>

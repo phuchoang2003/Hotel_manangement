@@ -10,5 +10,6 @@ void promptForValidDates(std::string& check_in_date, std::string& check_out_date
 std::string promptForRoomType();
 std::string promptForPhoneNumber();
 bool isValidPhoneNumber(const std::string& phone);
+void clearScreen();
 
 #endif // MAIN_FUNCTIONS_H

@@ -10,4 +10,6 @@ public:
     Hotel();
     Room* findAvailableRoom(const std::string& roomType);
     bool bookRoom(const std::string& roomType);
+    void showAllRooms();
+
 };

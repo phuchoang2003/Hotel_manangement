@@ -3,7 +3,7 @@
 #include "Booking.h"
 #include "main_functions.h"  
 
-// ... Phần đầu file không thay đổi
+
 
 int main() {
     Hotel hotel;
@@ -17,6 +17,9 @@ int main() {
 
     Customer customer(customer_name, customer_email, customer_phone);
 
+
+
+    hotel.showAllRooms();
     std::string room_type = promptForRoomType();
 
     if (hotel.bookRoom(room_type)) {
