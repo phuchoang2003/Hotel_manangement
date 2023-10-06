@@ -6,11 +6,13 @@
 class Booking {
 private:
     Customer customer;
-    Room* room;
+    const Room* room;
     std::string check_in_date;
     std::string check_out_date;
 
 public:
-    Booking(const Customer& cust, Room* r, const std::string& in_date, const std::string& out_date);
+    Booking(const Customer& customer, const Room* room, const std::string& checkIn, const std::string& checkOut);
     void confirm();
+    void saveToFile() const;
+
 };

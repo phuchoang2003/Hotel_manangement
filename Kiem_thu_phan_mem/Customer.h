@@ -14,6 +14,7 @@ public:
     std::string getName() const;
     std::string getEmail() const;
     std::string getPhone() const;
+    void saveToFile() const;
 };
 
 #endif // CUSTOMER_H

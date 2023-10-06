@@ -16,4 +16,7 @@ public:
     std::string getType() const;
     std::string getBookingStatus() const;
     void book();
+    void setBookingStatus(const std::string& status);
+  
+
 };

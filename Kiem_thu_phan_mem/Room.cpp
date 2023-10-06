@@ -1,7 +1,7 @@
-// Room.cpp
-#include "Room.h"
+﻿#include "Room.h"
 
-Room::Room(int id, const std::string& type) : id(id), roomType(type), isBooked(false) {}
+Room::Room(int id, const std::string& type) : id(id), roomType(type), isBooked(false) {} 
+
 
 int Room::getID() const {
     return id;
@@ -20,5 +20,12 @@ std::string Room::getBookingStatus() const {
 }
 
 void Room::book() {
-    isBooked = true;
+    if (!isBooked) {
+        isBooked = true;
+    }
 }
+
+void Room::setBookingStatus(const std::string& status) {
+    isBooked = (status == "Booked");
+}
+
