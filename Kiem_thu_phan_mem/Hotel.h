@@ -11,5 +11,6 @@ public:
     Room* findAvailableRoom(const std::string& roomType);
     bool bookRoom(const std::string& roomType);
     void showAllRooms();
+    void showAvailableRoomsOfType(const std::string& roomType);
 
 };

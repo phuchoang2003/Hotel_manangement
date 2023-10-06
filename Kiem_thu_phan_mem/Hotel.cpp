@@ -50,3 +50,21 @@ void Hotel::showAllRooms() {
     std::cin.ignore();
     std::cin.get();
 }
+
+
+void Hotel::showAvailableRoomsOfType(const std::string& roomType) {
+    clearScreen();
+    std::cout << "Available " << roomType << " rooms: \n";
+    int count = 0;
+    for (const Room& room : rooms) {
+        if (room.available() && room.getType() == roomType) {
+            std::cout << "- Room ID: " << room.getID() << "\n";
+            count++;
+        }
+    }
+    if (count == 0) {
+        std::cout << "No " << roomType << " rooms available.\n";
+    }
+    std::cin.ignore();
+    std::cin.get(); // Pause for user to read the list
+}
