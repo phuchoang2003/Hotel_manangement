@@ -1,4 +1,4 @@
-#include "Hotel.h"
+﻿#include "Hotel.h"
 #include "main_functions.h"
 #include <iostream>
 #include <fstream>
@@ -54,22 +54,102 @@ void Hotel::showAllRooms() {
 }
 
 
-void Hotel::showAvailableRoomsOfType(const std::string& roomType) {
+//void Hotel::showAvailableRoomsOfType(const std::string& roomType) {
+//    clearScreen();
+//    std::cout << "Available " << roomType << " rooms: \n";
+//    int count = 0;
+//    for (const Room& room : rooms) {
+//        if (room.available() && room.getType() == roomType) {
+//            std::cout << "- Room ID: " << room.getID() << "\n";
+//            count++;
+//        }
+//    }
+//    if (count == 0) {
+//        std::cout << "No " << roomType << " rooms available.\n";
+//    }
+//    std::cin.ignore();
+//    std::cin.get(); // Pause for user to read the list
+//}
+
+//void Hotel::showAvailableRoomsOfType() {
+//    std::string roomType;
+//    bool validRoomType = false;
+//
+//    do {
+//        std::cout << "Enter room type (Single/Double): ";
+//        std::getline(std::cin, roomType);
+//
+//        // Kiểm tra xem người dùng có nhập một kiểu phòng hợp lệ không
+//        if (roomType == "Single" || roomType == "Double") {
+//            validRoomType = true;
+//        }
+//        else {
+//            clearScreen();
+//            std::cout << "Invalid room type. Please enter again." << std::endl;
+//            continue;
+//        }
+//
+//        int count = 0;
+//        std::cout << "Available " << roomType << " rooms: \n";
+//        for (const Room& room : rooms) {
+//            if (room.available() && room.getType() == roomType) {
+//                std::cout << "- Room ID: " << room.getID() << "\n";
+//                count++;
+//            }
+//        }
+//
+//        if (count == 0) {
+//            std::cout << "No " << roomType << " rooms available.\n";
+//            validRoomType = false;  // Force user to enter room type again
+//        }
+//
+//    } while (!validRoomType);
+//
+//    std::cin.ignore();
+//    std::cin.get(); // Pause for user to read the list
+//}
+
+std::string Hotel::showAvailableRoomsOfType() {
     clearScreen();
-    std::cout << "Available " << roomType << " rooms: \n";
-    int count = 0;
-    for (const Room& room : rooms) {
-        if (room.available() && room.getType() == roomType) {
-            std::cout << "- Room ID: " << room.getID() << "\n";
-            count++;
+
+    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+
+    std::string roomType;
+    bool validRoomType = false;
+
+    do {
+        std::cout << "Enter room type (Single/Double): ";
+        std::getline(std::cin, roomType);
+
+        // Kiểm tra xem người dùng có nhập một kiểu phòng hợp lệ không
+        if (roomType == "Single" || roomType == "Double") {
+            validRoomType = true;
         }
-    }
-    if (count == 0) {
-        std::cout << "No " << roomType << " rooms available.\n";
-    }
-    std::cin.ignore();
-    std::cin.get(); // Pause for user to read the list
+        else {
+            clearScreen();
+            std::cout << "Invalid room type. Please enter again." << std::endl;
+            continue;
+        }
+
+        int count = 0;
+        std::cout << "Available " << roomType << " rooms: \n";
+        for (const Room& room : rooms) {
+            if (room.available() && room.getType() == roomType) {
+                std::cout << "- Room ID: " << room.getID() << "\n";
+                count++;
+            }
+        }
+
+        if (count == 0) {
+            std::cout << "No " << roomType << " rooms available.\n";
+            validRoomType = false;  // Đặt lại trạng thái không hợp lệ để yêu cầu người dùng nhập lại
+            std::cout << "Please choose another room type." << std::endl;
+        }
+    } while (!validRoomType);
+
+    return roomType;  // Trả về loại phòng đã được chọn
 }
+
 
 
 bool Hotel::isRoomAvailable(int roomId) const {

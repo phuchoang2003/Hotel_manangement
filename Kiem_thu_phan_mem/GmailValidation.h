@@ -4,6 +4,6 @@
 
 #include <string>
 
-bool isValidGmail(const std::string& email);
+ bool isValidGmail(const std::string& email);
 
 #endif // GMAILVALIDATION_H

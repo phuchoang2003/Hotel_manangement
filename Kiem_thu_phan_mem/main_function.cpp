@@ -9,10 +9,30 @@
 #include <unistd.h>
 #endif
 
+#include <cctype> 
+
+bool isValidName(const std::string& name) {
+    for (char c : name) {
+        if (!std::isalpha(c) && c != ' ') {  
+            return false;
+        }
+    }
+    return true;
+}
+
+
 std::string promptForName() {
     std::string name;
+    do {
     std::cout << "Enter your name: ";
     std::getline(std::cin, name);
+    if (!isValidName(name)) {
+        clearScreen();
+
+        std::cout << "Your name is not valid. Please enter your name again! " << std :: endl;
+
+    }
+    } while (!isValidName(name));
     return name;
 }
 
@@ -76,14 +96,14 @@ void promptForValidDates(std::string& check_in_date, std::string& check_out_date
     } while (true);
 }
 
-std::string promptForRoomType() {
-    clearScreen();
-
-    std::string room_type;
-    std::cout << "Enter room type (Single/Double): ";
-    std::cin >> room_type;
-    return room_type;
-}
+//std::string promptForRoomType() {
+//    clearScreen();
+//
+//    std::string room_type;
+//    std::cout << "Enter room type (Single/Double): ";
+//    std::cin >> room_type;
+//    return room_type;
+//}
 
 bool isValidPhoneNumber(const std::string& phone) {
     return phone.length() == 10 && std::all_of(phone.begin(), phone.end(), ::isdigit);

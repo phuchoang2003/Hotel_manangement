@@ -31,25 +31,41 @@ int main() {
             Customer customer(customer_name, customer_email, customer_phone);
             customer.saveToFile();
 
-            std::string room_type = promptForRoomType();
-            hotel.showAvailableRoomsOfType(room_type);
+            //std::string room_type = promptForRoomType();
+            
 
+
+            std::string chosenRoomType = hotel.showAvailableRoomsOfType();
             int roomId;
-            std::cout << "Please enter the ID of the room you would like to book: ";
-            std::cin >> roomId;
+            bool validRoomId = false;
 
-            if (hotel.isRoomAvailable(roomId)) {
-                hotel.bookRoomById(roomId);
-                const Room* desiredRoom = hotel.getRoomById(roomId);
-                Booking booking(customer, desiredRoom, check_in_date, check_out_date);
-                booking.confirm();
-                booking.saveToFile();
-                hotel.saveHotelData("hotel_data.txt");  
+            do {
+                std::cout << "Please enter the ID of the room you would like to book: ";
+                std::cin >> roomId;
 
-            }
-            else {
-                std::cout << "Sorry, the selected room is not available or invalid ID." << std::endl;
-            }
+                // Xóa bộ đệm
+                std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+
+                if (hotel.isRoomAvailable(roomId)) {
+                    const Room* desiredRoom = hotel.getRoomById(roomId);
+
+                    if (desiredRoom->getType() == chosenRoomType) {
+                        hotel.bookRoomById(roomId);
+                        Booking booking(customer, desiredRoom, check_in_date, check_out_date);
+                        booking.confirm();
+                        booking.saveToFile();
+                        hotel.saveHotelData("hotel_data.txt");
+                        validRoomId = true;
+                    }
+                    else {
+                        std::cout << "The room ID does not match the selected room type. Please try again." << std::endl;
+                    }
+                }
+                else {
+                    std::cout << "Sorry, the selected room is not available or invalid ID. Please try again." << std::endl;
+                }
+            } while (!validRoomId);
+
             break;
         }
         case '2':

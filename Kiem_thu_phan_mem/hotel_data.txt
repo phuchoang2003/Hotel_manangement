@@ -1,5 +1,5 @@
 1,Single,Available
-2,Single,Booked
+2,Single,Available
 3,Single,Available
 4,Single,Available
 5,Single,Available
