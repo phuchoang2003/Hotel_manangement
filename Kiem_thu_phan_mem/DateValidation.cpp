@@ -15,7 +15,7 @@ bool is_valid_date_format(const std::string& date) {
     ss.ignore();
     ss >> day;
 
-    if (year < 1900 || year > 2100) return false;
+    if (year < 2023 || year > 2024) return false;
     if (month < 1 || month > 12) return false;
     if (day < 1 || day > 31) return false;
 
