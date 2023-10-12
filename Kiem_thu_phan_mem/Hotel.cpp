@@ -41,7 +41,7 @@ bool Hotel::bookRoom(const std::string& roomType) {
 }
 
 void Hotel::showAllRooms() {
-    clearScreen(); 
+    /*clearScreen(); 
     std::cout << "List of all rooms: \n";
     for (const Room& room : rooms) {
         std::cout << "- Room ID: " << room.getID()
@@ -50,7 +50,36 @@ void Hotel::showAllRooms() {
     }
    
     std::cin.ignore();
-    std::cin.get();
+    std::cin.get();*/
+
+
+    
+        clearScreen();
+
+        int bookedRooms = 0;
+        int availableRooms = 0;
+
+        std::cout << "List of all rooms: \n";
+        for (const Room& room : rooms) {
+            std::cout << "- Room ID: " << room.getID()
+                << ", Type: " << room.getType()
+                << ", Status: " << room.getBookingStatus() << "\n";
+
+            if (room.getBookingStatus() == "Booked") {
+                bookedRooms++;
+            }
+            else {
+                availableRooms++;
+            }
+        }
+
+        std::cout << "\nTotal booked rooms: " << bookedRooms << std::endl;
+        std::cout << "Total available rooms: " << availableRooms << std::endl;
+
+        std::cin.ignore();
+        std::cin.get();
+    
+
 }
 
 
