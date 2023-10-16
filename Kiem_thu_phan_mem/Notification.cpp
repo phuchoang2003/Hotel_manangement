@@ -10,5 +10,6 @@ void Notification::confirmBookingToCustomer(const Customer& customer) {
     std::cout << "Dear " << customer.getName() << ",\n";
     std::cout << "Your booking has been confirmed!\n";
     std::cout << "-------------------------------------------\n";
+    std::cin.get();
 }
 

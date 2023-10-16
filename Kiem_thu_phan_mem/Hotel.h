@@ -19,6 +19,8 @@ public:
     const Room* getRoomById(int roomId) const;
     void loadHotelData(const std::string& filename);
     void saveHotelData(const std::string& filename);
+    void searchCustomerByRoomIdFromFile() const;
+
 
 
 };

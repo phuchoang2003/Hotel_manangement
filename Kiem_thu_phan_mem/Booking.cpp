@@ -12,6 +12,7 @@ void Booking::confirm() {
 }
 
 
+
 void Booking::saveToFile() const {
     std::ofstream outFile("bookings.txt", std::ios::app); // append mode
     if (outFile.is_open()) {

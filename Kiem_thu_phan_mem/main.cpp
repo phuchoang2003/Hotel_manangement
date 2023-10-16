@@ -2,6 +2,7 @@
 #include "Hotel.h"
 #include "Booking.h"
 #include "main_functions.h"
+#include "Notification.h"
 
 int main() {
     Hotel hotel;
@@ -10,9 +11,9 @@ int main() {
 
     do {
         clearScreen();
-        std::cout << "=== Hotel Room Booking ===\n";
         std::cout << "1. Book a room\n";
         std::cout << "2. Show all rooms\n";
+        std::cout << "3. Search for customer by room ID\n";
         std::cout << "0. Exit\n";
         std::cout << "Enter your choice: ";
         std::cin >> choice;
@@ -65,13 +66,17 @@ int main() {
                     std::cout << "Sorry, the selected room is not available or invalid ID. Please try again." << std::endl;
                 }
             } while (!validRoomId);
-
+            Notification::confirmBookingToCustomer(customer);
             break;
         }
         case '2':
             hotel.showAllRooms();
             std::cin.ignore();
             std::cin.get();  // Pause for user to read the list
+            break;
+
+        case '3':
+            hotel.searchCustomerByRoomIdFromFile();
             break;
         case '0':
             hotel.saveHotelData("hotel_data.txt");  

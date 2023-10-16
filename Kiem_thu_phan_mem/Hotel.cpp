@@ -1,4 +1,6 @@
 ﻿#include "Hotel.h"
+#include "Booking.h"
+
 #include "main_functions.h"
 #include <iostream>
 #include <fstream>
@@ -248,4 +250,53 @@ void Hotel::saveHotelData(const std::string& filename) {
     }
 
     file.close();
+}
+
+
+void Hotel::searchCustomerByRoomIdFromFile() const {
+    clearScreen();
+    int roomId;
+    std::cout << "Enter the Room ID to search for the customer: ";
+    std::cin >> roomId;
+
+    std::ifstream inFile("bookings.txt");
+    if (!inFile.is_open()) {
+        std::cerr << "Unable to open bookings.txt for reading!";
+        return;
+    }
+
+    std::string line;
+    while (std::getline(inFile, line)) {
+        std::stringstream ss(line);
+        std::string name, email, phone, roomType, roomIdStr, checkInDate, checkOutDate;
+
+        std::getline(ss, name, ',');
+        std::getline(ss, email, ',');
+        std::getline(ss, phone, ',');
+        std::getline(ss, roomType, ',');
+        std::getline(ss, roomIdStr, ',');
+        std::getline(ss, checkInDate, ',');
+        std::getline(ss, checkOutDate, ',');
+
+        if (std::stoi(roomIdStr) == roomId) {
+            clearScreen();
+
+            std::cout << "Customer Information for Room ID " << roomId << ":\n";
+            std::cout << "Name: " << name << "\n";
+            std::cout << "Email: " << email << "\n";
+            std::cout << "Phone: " << phone << "\n";
+            std::cout << "Room Type: " << roomType << "\n";
+            std::cout << "Check-in Date: " << checkInDate << "\n";
+            std::cout << "Check-out Date: " << checkOutDate << "\n";
+            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+            std::cin.get();
+            inFile.close();
+            return;
+        }
+    }
+    clearScreen();
+    std::cout << "No booking found for Room ID " << roomId << ".\n";
+    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+    std::cin.get();
+    inFile.close();
 }
