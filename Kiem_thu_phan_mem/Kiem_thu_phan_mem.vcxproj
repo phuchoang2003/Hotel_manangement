@@ -130,6 +130,8 @@
     <ClCompile Include="Booking.cpp" />
     <ClCompile Include="Customer.cpp" />
     <ClCompile Include="DateValidation.cpp" />
+    <ClCompile Include="Employee.h" />
+    <ClCompile Include="Emplyee.cpp" />
     <ClCompile Include="GmailValidation.cpp" />
     <ClCompile Include="Hotel.cpp" />
     <ClCompile Include="main.cpp" />

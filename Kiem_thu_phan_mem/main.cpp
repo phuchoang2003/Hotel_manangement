@@ -76,7 +76,15 @@ int main() {
             break;
 
         case '3':
-            hotel.searchCustomerByRoomIdFromFile();
+            if (authenticateEmployee()) {
+                hotel.searchCustomerByRoomIdFromFile();
+            }
+            else {
+                clearScreen();
+                std::cout << "Authentication failed. Access denied." << std::endl;
+                std::cin.ignore();
+                std::cin.get();
+            }
             break;
         case '0':
             hotel.saveHotelData("hotel_data.txt");  

@@ -1,4 +1,4 @@
-#include "main_functions.h"
+﻿#include "main_functions.h"
 #include "DateValidation.h"
 #include "GmailValidation.h"
 #include <iostream>
@@ -128,4 +128,23 @@ std::string promptForPhoneNumber() {
     } while (true);
 
     return phone;
+}
+
+
+#include "Employee.h"
+
+bool authenticateEmployee() {
+    clearScreen();
+    std::string username, password;
+
+    Employee emp("admin", "admin"); 
+
+    std::cout << "Employee Login" << std::endl;
+    std::cout << "Enter Username: ";
+    std::getline(std::cin, username);
+
+    std::cout << "Enter Password: ";
+    std::getline(std::cin, password);
+
+    return emp.authenticate(username, password);
 }

@@ -42,6 +42,12 @@
     <ClCompile Include="Notification.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Employee.h">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Emplyee.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Room.h">
