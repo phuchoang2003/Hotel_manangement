@@ -9,6 +9,8 @@ private:
 
 public:
     Hotel();
+    double getSingleRoomPrice() const;
+    double getDoubleRoomPrice() const;
     Room* findAvailableRoom(const std::string& roomType);
     bool bookRoom(const std::string& roomType);
     void showAllRooms();
@@ -21,7 +23,7 @@ public:
     const Room* getRoomById(int roomId) const;
     void loadHotelData(const std::string& filename);
     void saveHotelData(const std::string& filename);
-    void searchCustomerByRoomIdFromFile() const;
+    //void searchCustomerByRoomIdFromFile() const;
 
 
 

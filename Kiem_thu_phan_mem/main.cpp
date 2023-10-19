@@ -7,7 +7,6 @@
 
 void handleHotelOperations() {
     Hotel hotel;
-    hotel.saveHotelData("hotel_data.txt");
     hotel.loadHotelData("hotel_data.txt");
 
      char choice;

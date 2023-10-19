@@ -44,20 +44,7 @@ bool Hotel::bookRoom(const std::string& roomType) {
     return false;
 }
 
-void Hotel::showAllRooms() {
-    /*clearScreen(); 
-    std::cout << "List of all rooms: \n";
-    for (const Room& room : rooms) {
-        std::cout << "- Room ID: " << room.getID()
-            << ", Type: " << room.getType()
-            << ", Status: " << room.getBookingStatus() << "\n";
-    }
-   
-    std::cin.ignore();
-    std::cin.get();*/
-
-
-    
+void Hotel::showAllRooms() { 
         clearScreen();
 
         int bookedRooms = 0;
@@ -88,60 +75,6 @@ void Hotel::showAllRooms() {
 }
 
 
-//void Hotel::showAvailableRoomsOfType(const std::string& roomType) {
-//    clearScreen();
-//    std::cout << "Available " << roomType << " rooms: \n";
-//    int count = 0;
-//    for (const Room& room : rooms) {
-//        if (room.available() && room.getType() == roomType) {
-//            std::cout << "- Room ID: " << room.getID() << "\n";
-//            count++;
-//        }
-//    }
-//    if (count == 0) {
-//        std::cout << "No " << roomType << " rooms available.\n";
-//    }
-//    std::cin.ignore();
-//    std::cin.get(); // Pause for user to read the list
-//}
-
-//void Hotel::showAvailableRoomsOfType() {
-//    std::string roomType;
-//    bool validRoomType = false;
-//
-//    do {
-//        std::cout << "Enter room type (Single/Double): ";
-//        std::getline(std::cin, roomType);
-//
-//        // Kiểm tra xem người dùng có nhập một kiểu phòng hợp lệ không
-//        if (roomType == "Single" || roomType == "Double") {
-//            validRoomType = true;
-//        }
-//        else {
-//            clearScreen();
-//            std::cout << "Invalid room type. Please enter again." << std::endl;
-//            continue;
-//        }
-//
-//        int count = 0;
-//        std::cout << "Available " << roomType << " rooms: \n";
-//        for (const Room& room : rooms) {
-//            if (room.available() && room.getType() == roomType) {
-//                std::cout << "- Room ID: " << room.getID() << "\n";
-//                count++;
-//            }
-//        }
-//
-//        if (count == 0) {
-//            std::cout << "No " << roomType << " rooms available.\n";
-//            validRoomType = false;  // Force user to enter room type again
-//        }
-//
-//    } while (!validRoomType);
-//
-//    std::cin.ignore();
-//    std::cin.get(); // Pause for user to read the list
-//}
 
 std::string Hotel::showAvailableRoomsOfType() {
     clearScreen();
@@ -259,55 +192,7 @@ void Hotel::saveHotelData(const std::string& filename) {
 }
 
 
-void Hotel::searchCustomerByRoomIdFromFile() const {
-    clearScreen();
-    int roomId;
-    std::cout << "Enter the Room ID to search for the customer: ";
-    std::cin >> roomId;
-
-    std::ifstream inFile("bookings.txt");
-    if (!inFile.is_open()) {
-        std::cerr << "Unable to open bookings.txt for reading!";
-        return;
-    }
-
-    std::string line;
-    while (std::getline(inFile, line)) {
-        std::stringstream ss(line);
-        std::string name, email, phone, roomType, roomIdStr, checkInDate, checkOutDate;
-
-        std::getline(ss, name, ',');
-        std::getline(ss, email, ',');
-        std::getline(ss, phone, ',');
-        std::getline(ss, roomType, ',');
-        std::getline(ss, roomIdStr, ',');
-        std::getline(ss, checkInDate, ',');
-        std::getline(ss, checkOutDate, ',');
-
-        if (std::stoi(roomIdStr) == roomId) {
-            clearScreen();
-
-            std::cout << "Customer Information for Room ID " << roomId << ":\n";
-            std::cout << "Name: " << name << "\n";
-            std::cout << "Email: " << email << "\n";
-            std::cout << "Phone: " << phone << "\n";
-            std::cout << "Room Type: " << roomType << "\n";
-            std::cout << "Check-in Date: " << checkInDate << "\n";
-            std::cout << "Check-out Date: " << checkOutDate << "\n";
-            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-            std::cin.get();
-            inFile.close();
-            return;
-        }
-    }
-    clearScreen();
-    std::cout << "No booking found for Room ID " << roomId << ".\n";
-    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-    std::cin.get();
-    inFile.close();
-}
-
-
+\
 
 std::vector<int> Hotel::searchAvailableRooms(const std::string& checkInDate, const std::string& checkOutDate, const std::string& roomType, double minPrice,
     double maxPrice) {
@@ -350,3 +235,20 @@ std::vector<int> Hotel::searchAvailableRooms(const std::string& checkInDate, con
     return availableRooms;
 }
 
+double Hotel::getSingleRoomPrice() const {
+    for (const Room& room : rooms) {
+        if (room.getType() == "Single") {
+            return room.getPrice();  
+        }
+    }
+    return 0.0; 
+}
+
+double Hotel::getDoubleRoomPrice() const {
+    for (const Room& room : rooms) {
+        if (room.getType() == "Double") {
+            return room.getPrice();  
+        }
+    }
+    return 0.0;  
+}

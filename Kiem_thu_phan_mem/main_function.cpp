@@ -125,33 +125,90 @@ std::string promptForPhoneNumber() {
 void searchForAvailableRooms(Hotel& hotel) {
     clearScreen();
 
-    // 1. Nhập thông tin từ người dùng
+    // input
+    std::string input;
     std::string checkInDate, checkOutDate, roomType;
     double minPrice, maxPrice;
-    std::cout << "Please enter your minimum price: ";
-    std::cin >> minPrice;
-    std::cin.ignore();  // clear the newline
-    std::cout << "Please enter your maximum price: ";
-    std::cin >> maxPrice;
-    std::cin.ignore();
-    std::cout << "Please enter your desired check-in date (e.g., YYYY-MM-DD): ";
-    std::getline(std::cin, checkInDate);
 
-    std::cout << "Please enter your desired check-out date (e.g., YYYY-MM-DD): ";
-    std::getline(std::cin, checkOutDate);
+    // price
+    std::cout << "Please enter minimum price: ";
+    std::getline(std::cin, input);
+    while (!isValidNumberInput(input)) {
+        std::cout << "Invalid input. Please enter a valid number for minimum price: ";
+        std::getline(std::cin, input);
+    }
+    minPrice = std::stod(input);
 
+    std::cout << "Please enter maximum price: ";
+    std::getline(std::cin, input);
+    while (!isValidNumberInput(input)) {
+        std::cout << "Invalid input. Please enter a valid number for maximum price: ";
+        std::getline(std::cin, input);
+    }
+    maxPrice = std::stod(input);
+
+    // date
+    while (true) {
+        std::cout << "Please enter your desired check-in date (e.g., YYYY-MM-DD): ";
+        std::getline(std::cin, checkInDate);
+        if (!is_valid_date_format(checkInDate)) {
+            std::cout << "Invalid date format. Please enter in the format YYYY-MM-DD.\n";
+        }
+        else if (is_past_date(checkInDate)) {
+            std::cout << "You've entered a past date for check-in. Please enter a future date.\n";
+        }
+        else {
+            break;
+        }
+    }
+
+    while (true) {
+        std::cout << "Please enter your desired check-out date (e.g., YYYY-MM-DD): ";
+        std::getline(std::cin, checkOutDate);
+        if (!is_valid_date_format(checkOutDate)) {
+            std::cout << "Invalid date format. Please enter in the format YYYY-MM-DD.\n";
+        }
+        else if (is_past_date(checkOutDate)) {
+            std::cout << "You've entered a past date for check-out. Please enter a future date.\n";
+        }
+        else if (!is_valid_date_range(checkInDate, checkOutDate)) {
+            std::cout << "Check-out date is before check-in date. Please re-enter.\n";
+        }
+        else {
+            break;
+        }
+    }
+
+    // room type
     std::cout << "Please enter room type (Single/Double): ";
     std::getline(std::cin, roomType);
 
-    // 2. Gọi hàm `searchAvailableRooms` để tìm các phòng trống.
-    std::vector<int> availableRoomIDs = hotel.searchAvailableRooms(checkInDate, checkOutDate, roomType,minPrice,maxPrice);
+    if (!isValidRoomType(roomType)) {
+        std::cout << "Invalid room type entered. We only offer Single and Double rooms.\n";
+        std::cout << "Press any key to continue...";
+        std::cin.get();
+        return;
+    }
 
-    // 3. Hiển thị các phòng trống hoặc thông báo nếu không có phòng trống.
+    std::vector<int> availableRoomIDs = hotel.searchAvailableRooms(checkInDate, checkOutDate, roomType, minPrice, maxPrice);
+
+    double singleRoomPrice = hotel.getSingleRoomPrice();
+    double doubleRoomPrice = hotel.getDoubleRoomPrice();
+
+    if ((minPrice > doubleRoomPrice) || (maxPrice < singleRoomPrice)) {
+        std::cout << "There are no rooms available within the specified price range.\n";
+        std::cout << "Price of Single Room: " << singleRoomPrice << "\n";
+        std::cout << "Price of Double Room: " << doubleRoomPrice << "\n";
+        std::cout << "Please choose a valid price range based on the room prices provided.\n";
+        std::cin.get();
+        return;
+    }
+
     if (availableRoomIDs.empty()) {
-        std::cout << "Sorry, no rooms available for the given dates and room type.\n";
+        std::cout << "Sorry, no rooms match your search criteria.\n";
     }
     else {
-        std::cout << "Available rooms for the given dates and room type are: \n";
+        std::cout << "Available rooms based on your search criteria: \n";
         for (int id : availableRoomIDs) {
             std::cout << "Room ID: " << id << "\n";
         }
@@ -159,4 +216,20 @@ void searchForAvailableRooms(Hotel& hotel) {
 
     std::cout << "Press any key to continue...";
     std::cin.get();
+}
+
+
+
+bool isValidNumberInput(const std::string& input) {
+    for (char ch : input) {
+        if (!std::isdigit(ch) && ch != '.') {
+            return false;
+        }
+    }
+    return true;
+}
+
+
+bool isValidRoomType(const std::string& type) {
+    return (type == "Single" || type == "Double");
 }
