@@ -8,14 +8,16 @@
 #include <sstream>
 
 Hotel::Hotel() {
+    double singleRoomPrice = 100.00;
+    double doubleRoomPrice = 150.00;
     int roomId = 1;
     for (int i = 0; i < 10; ++i) {
-        rooms.push_back(Room(roomId, "Single"));  
+        rooms.push_back(Room(roomId, "Single", singleRoomPrice));
         roomId++;
     }
 
     for (int i = 0; i < 10; ++i) {
-        rooms.push_back(Room(roomId, "Double"));  
+        rooms.push_back(Room(roomId, "Double", doubleRoomPrice));
         roomId++;
     }
 }
@@ -65,6 +67,7 @@ void Hotel::showAllRooms() {
         for (const Room& room : rooms) {
             std::cout << "- Room ID: " << room.getID()
                 << ", Type: " << room.getType()
+                << ", Price: $" << room.getPrice()
                 << ", Status: " << room.getBookingStatus() << "\n";
 
             if (room.getBookingStatus() == "Booked") {
@@ -225,11 +228,13 @@ void Hotel::loadHotelData(const std::string& filename) {
     while (std::getline(file, line)) {
         std::stringstream ss(line);
         std::string id_str, type, status;
+        double price;
         std::getline(ss, id_str, ',');
         std::getline(ss, type, ',');
+        ss >> price;  // Read the price
         std::getline(ss, status, ',');
         int id = std::stoi(id_str);
-        Room room(id, type);
+        Room room(id, type, price);  // updated with price
         room.setBookingStatus(status);
         rooms.push_back(room);
     }
@@ -246,6 +251,7 @@ void Hotel::saveHotelData(const std::string& filename) {
     for (const Room& room : rooms) {
         file << room.getID() << ","
             << room.getType() << ","
+            << room.getPrice() << ","
             << room.getBookingStatus() << "\n";
     }
 
@@ -303,12 +309,13 @@ void Hotel::searchCustomerByRoomIdFromFile() const {
 
 
 
-std::vector<int> Hotel::searchAvailableRooms(const std::string& checkInDate, const std::string& checkOutDate, const std::string& roomType) {
+std::vector<int> Hotel::searchAvailableRooms(const std::string& checkInDate, const std::string& checkOutDate, const std::string& roomType, double minPrice,
+    double maxPrice) {
     std::vector<int> availableRooms;
 
     // Populate the list with all rooms of the required type
     for (const Room& room : rooms) {
-        if (room.getType() == roomType) {
+        if (room.getType() == roomType && room.getPrice() >= minPrice && room.getPrice() <= maxPrice) {
             availableRooms.push_back(room.getID());
         }
     }

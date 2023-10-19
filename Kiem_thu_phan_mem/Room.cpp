@@ -1,7 +1,14 @@
 ﻿#include "Room.h"
 
-Room::Room(int id, const std::string& type) : id(id), roomType(type), isBooked(false) {} 
+Room::Room(int id, const std::string& type,double price) : id(id), roomType(type), isBooked(false),price(price) {} 
 
+double Room::getPrice() const {
+    return price;
+}
+
+void Room::setPrice(double newPrice) {
+    price = newPrice;
+}
 
 int Room::getID() const {
     return id;

@@ -127,7 +127,13 @@ void searchForAvailableRooms(Hotel& hotel) {
 
     // 1. Nhập thông tin từ người dùng
     std::string checkInDate, checkOutDate, roomType;
-
+    double minPrice, maxPrice;
+    std::cout << "Please enter your minimum price: ";
+    std::cin >> minPrice;
+    std::cin.ignore();  // clear the newline
+    std::cout << "Please enter your maximum price: ";
+    std::cin >> maxPrice;
+    std::cin.ignore();
     std::cout << "Please enter your desired check-in date (e.g., YYYY-MM-DD): ";
     std::getline(std::cin, checkInDate);
 
@@ -138,7 +144,7 @@ void searchForAvailableRooms(Hotel& hotel) {
     std::getline(std::cin, roomType);
 
     // 2. Gọi hàm `searchAvailableRooms` để tìm các phòng trống.
-    std::vector<int> availableRoomIDs = hotel.searchAvailableRooms(checkInDate, checkOutDate, roomType);
+    std::vector<int> availableRoomIDs = hotel.searchAvailableRooms(checkInDate, checkOutDate, roomType,minPrice,maxPrice);
 
     // 3. Hiển thị các phòng trống hoặc thông báo nếu không có phòng trống.
     if (availableRoomIDs.empty()) {

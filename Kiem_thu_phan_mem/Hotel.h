@@ -15,7 +15,7 @@ public:
     //void showAvailableRoomsOfType(const std::string& roomType);
     std::string showAvailableRoomsOfType();
     bool isRoomAvailable(int roomId) const;
-    std::vector<int> searchAvailableRooms(const std::string& checkInDate, const std::string& checkOutDate, const std::string& roomType);
+    std::vector<int> searchAvailableRooms(const std::string& checkInDate, const std::string& checkOutDate, const std::string& roomType, double minPrice, double maxPrice);
     void searchForAvailableRooms(Hotel& hotel);
     void bookRoomById(int roomId);
     const Room* getRoomById(int roomId) const;
