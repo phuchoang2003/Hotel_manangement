@@ -130,14 +130,13 @@
     <ClCompile Include="Booking.cpp" />
     <ClCompile Include="Customer.cpp" />
     <ClCompile Include="DateValidation.cpp" />
-    <ClCompile Include="Employee.h" />
-    <ClCompile Include="Emplyee.cpp" />
     <ClCompile Include="GmailValidation.cpp" />
     <ClCompile Include="Hotel.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="main_function.cpp" />
     <ClCompile Include="Notification.cpp" />
     <ClCompile Include="Room.cpp" />
+    <ClCompile Include="UsersManagement.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Booking.h" />
@@ -147,6 +146,7 @@
     <ClInclude Include="Hotel.h" />
     <ClInclude Include="main_functions.h" />
     <ClInclude Include="Room.h" />
+    <ClInclude Include="UsersManagement.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Notification.h" />

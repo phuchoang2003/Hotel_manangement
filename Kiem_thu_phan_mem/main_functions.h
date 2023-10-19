@@ -11,7 +11,7 @@ void promptForValidDates(std::string& check_in_date, std::string& check_out_date
 std::string promptForPhoneNumber();
 bool isValidPhoneNumber(const std::string& phone);
 bool isValidName(const std::string& name);
-bool authenticateEmployee();
+//bool authenticateEmployee();
 
 void clearScreen();
 

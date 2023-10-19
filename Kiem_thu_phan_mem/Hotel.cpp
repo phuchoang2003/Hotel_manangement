@@ -8,7 +8,6 @@
 
 Hotel::Hotel() {
     int roomId = 1;
-
     for (int i = 0; i < 10; ++i) {
         rooms.push_back(Room(roomId, "Single"));  
         roomId++;

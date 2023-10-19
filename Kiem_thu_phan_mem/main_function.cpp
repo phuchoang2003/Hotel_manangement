@@ -96,14 +96,6 @@ void promptForValidDates(std::string& check_in_date, std::string& check_out_date
     } while (true);
 }
 
-//std::string promptForRoomType() {
-//    clearScreen();
-//
-//    std::string room_type;
-//    std::cout << "Enter room type (Single/Double): ";
-//    std::cin >> room_type;
-//    return room_type;
-//}
 
 bool isValidPhoneNumber(const std::string& phone) {
     return phone.length() == 10 && std::all_of(phone.begin(), phone.end(), ::isdigit);
@@ -130,21 +122,3 @@ std::string promptForPhoneNumber() {
     return phone;
 }
 
-
-#include "Employee.h"
-
-bool authenticateEmployee() {
-    clearScreen();
-    std::string username, password;
-
-    Employee emp("admin", "admin"); 
-
-    std::cout << "Employee Login" << std::endl;
-    std::cout << "Enter Username: ";
-    std::getline(std::cin, username);
-
-    std::cout << "Enter Password: ";
-    std::getline(std::cin, password);
-
-    return emp.authenticate(username, password);
-}

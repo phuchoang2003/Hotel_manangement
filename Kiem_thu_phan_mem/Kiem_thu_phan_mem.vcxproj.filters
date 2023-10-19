@@ -42,10 +42,7 @@
     <ClCompile Include="Notification.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Employee.h">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Emplyee.cpp">
+    <ClCompile Include="UsersManagement.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -69,6 +66,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="main_functions.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="UsersManagement.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
