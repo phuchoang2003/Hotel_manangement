@@ -2,6 +2,10 @@
 #include "DateValidation.h"
 #include "GmailValidation.h"
 #include <iostream>
+#include <ctime>
+#include <sstream>
+#include <iomanip>
+#include <chrono>
 #include <regex>
 #ifdef _WIN32
 #include <windows.h>
@@ -232,4 +236,25 @@ bool isValidNumberInput(const std::string& input) {
 
 bool isValidRoomType(const std::string& type) {
     return (type == "Single" || type == "Double");
+}
+
+
+
+
+int calculateDaysStayed(const std::string& checkInDate, const std::string& checkOutDate) {
+    struct std::tm in = {}, out = {};
+    std::istringstream ssIn(checkInDate), ssOut(checkOutDate);
+    ssIn >> std::get_time(&in, "%Y-%m-%d");
+    ssOut >> std::get_time(&out, "%Y-%m-%d");
+    auto in_time_t = std::mktime(&in);
+    auto out_time_t = std::mktime(&out);
+    auto duration = std::chrono::system_clock::from_time_t(out_time_t) - std::chrono::system_clock::from_time_t(in_time_t);
+    return std::chrono::duration_cast<std::chrono::hours>(duration).count() / 24;
+}
+
+
+double calculatePayment(const Hotel& hotel, const std::string& roomType, const std::string& checkInDate, const std::string& checkOutDate) {
+    int days = calculateDaysStayed(checkInDate, checkOutDate);
+    double roomPrice = (roomType == "Single") ? hotel.getSingleRoomPrice() : hotel.getDoubleRoomPrice();
+    return roomPrice * days;
 }

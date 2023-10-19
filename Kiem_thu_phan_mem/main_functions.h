@@ -4,7 +4,8 @@
 
 #include <string>
 #include "Hotel.h"
-
+#include <ctime>
+#include <chrono>
 
 bool isValidRoomType(const std::string& type);
 std::string promptForName();
@@ -17,6 +18,9 @@ bool isValidName(const std::string& name);
 bool isValidNumberInput(const std::string& input);
 //bool authenticateEmployee();
 void searchForAvailableRooms(Hotel& hotel);
+int calculateDaysStayed(const std::string& checkInDate, const std::string& checkOutDate);
+double calculatePayment(const Hotel& hotel, const std::string& roomType, const std::string& checkInDate, const std::string& checkOutDate);
+
 void clearScreen();
 
 #endif // MAIN_FUNCTIONS_H

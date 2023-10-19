@@ -1,11 +1,47 @@
 ﻿#include "Hotel.h"
 #include "Booking.h"
-#include <algorithm> // for std::remove
-
+#include <algorithm> 
 #include "main_functions.h"
 #include <iostream>
 #include <fstream>
 #include <sstream>
+#include <chrono>
+#include <thread>
+
+
+bool Hotel::processPayment(int roomId, const std::string& checkInDate, const std::string& checkOutDate) {
+    int daysStayed = calculateDaysStayed(checkInDate, checkOutDate);
+    const Room* desiredRoom = getRoomById(roomId);
+    double roomPrice = desiredRoom->getPrice();
+
+    // Tính tổng tiền
+    double totalAmount = daysStayed * roomPrice;
+
+    // Hiển thị và xác nhận thanh toán
+    std::cout << "Total amount due for " << daysStayed << " day(s): $" << totalAmount << "\n";
+
+    std::cout << "Would you like to proceed with the payment? (y/n): ";
+
+    char paymentChoice;
+    std::cin >> paymentChoice;
+
+    if (paymentChoice == 'y' || paymentChoice == 'Y') {
+        for (int i = 0; i < 3; ++i) {
+            std::cout << "Processing payment" << std::string(i + 1, '.') << "\r";
+            std::cout.flush();
+            std::this_thread::sleep_for(std::chrono::seconds(1));
+        }
+        std::cout << "Payment successful!    \n";
+        return true;  // Trả về true nếu thanh toán thành công
+    }
+    else {
+        return false;  // Trả về false nếu không thanh toán
+    }
+}
+
+
+
+
 
 Hotel::Hotel() {
     double singleRoomPrice = 100.00;
@@ -251,4 +287,17 @@ double Hotel::getDoubleRoomPrice() const {
         }
     }
     return 0.0;  
+}
+
+
+
+void Hotel::confirmBookingToCustomer(const Customer& customer) {
+    clearScreen();
+
+    std::cout << "-------------------------------------------\n";
+    std::cout << "Email to " << customer.getEmail() << ":\n";
+    std::cout << "Dear " << customer.getName() << ",\n";
+    std::cout << "Your booking has been confirmed!\n";
+    std::cout << "-------------------------------------------\n";
+    std::cin.get();
 }

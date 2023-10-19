@@ -1,5 +1,4 @@
 #include "Booking.h"
-#include "Notification.h"
 #include <iostream>
 #include <fstream>
 
@@ -7,9 +6,6 @@ Booking::Booking(const Customer& cust, const Room* r, const std::string& in_date
     : customer(cust), room(r), check_in_date(in_date), check_out_date(out_date) {}
 
 
-void Booking::confirm() {
-    Notification::confirmBookingToCustomer(customer);
-}
 
 
 

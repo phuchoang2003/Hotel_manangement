@@ -3,7 +3,6 @@
 #include "Booking.h"
 #include "main_functions.h"
 #include "UsersManagement.h"
-#include "Notification.h"
 
 void handleHotelOperations() {
     Hotel hotel;
@@ -54,7 +53,6 @@ void handleHotelOperations() {
                         if (desiredRoom->getType() == chosenRoomType) {
                             hotel.bookRoomById(roomId);
                             Booking booking(customer, desiredRoom, check_in_date, check_out_date);
-                            booking.confirm();
                             booking.saveToFile();
                             hotel.saveHotelData("hotel_data.txt");
                             validRoomId = true;
@@ -67,7 +65,18 @@ void handleHotelOperations() {
                         std::cout << "Sorry, the selected room is not available or invalid ID. Please try again." << std::endl;
                     }
                 } while (!validRoomId);
-                Notification::confirmBookingToCustomer(customer);
+
+                // Tích hợp thanh toán vào đoạn này
+                bool paymentSuccess = hotel.processPayment(roomId, check_in_date, check_out_date);
+                if (paymentSuccess) {
+                    hotel.confirmBookingToCustomer(customer);
+                }
+                else {
+                    std::cout << "Booking cancelled as payment was not processed." << std::endl;
+                    std::cin.ignore();
+                    std::cin.get();
+                }
+
                 break;
             }
             case '2':

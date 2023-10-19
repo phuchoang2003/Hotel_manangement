@@ -39,9 +39,6 @@
     <ClCompile Include="main_function.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Notification.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="UsersManagement.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -71,10 +68,5 @@
     <ClInclude Include="UsersManagement.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Notification.h">
-      <Filter>Header Files</Filter>
-    </None>
   </ItemGroup>
 </Project>

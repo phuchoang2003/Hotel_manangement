@@ -134,7 +134,6 @@
     <ClCompile Include="Hotel.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="main_function.cpp" />
-    <ClCompile Include="Notification.cpp" />
     <ClCompile Include="Room.cpp" />
     <ClCompile Include="UsersManagement.cpp" />
   </ItemGroup>
@@ -147,9 +146,6 @@
     <ClInclude Include="main_functions.h" />
     <ClInclude Include="Room.h" />
     <ClInclude Include="UsersManagement.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Notification.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

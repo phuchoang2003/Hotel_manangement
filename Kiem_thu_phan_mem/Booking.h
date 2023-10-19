@@ -12,7 +12,6 @@ private:
     
 public:
     Booking(const Customer& customer, const Room* room, const std::string& checkIn, const std::string& checkOut);
-    void confirm();
     void saveToFile() const;
 
 };
