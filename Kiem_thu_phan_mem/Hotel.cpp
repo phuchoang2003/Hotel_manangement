@@ -1,5 +1,6 @@
 ﻿#include "Hotel.h"
 #include "Booking.h"
+#include <algorithm> // for std::remove
 
 #include "main_functions.h"
 #include <iostream>
@@ -299,3 +300,46 @@ void Hotel::searchCustomerByRoomIdFromFile() const {
     std::cin.get();
     inFile.close();
 }
+
+
+
+std::vector<int> Hotel::searchAvailableRooms(const std::string& checkInDate, const std::string& checkOutDate, const std::string& roomType) {
+    std::vector<int> availableRooms;
+
+    // Populate the list with all rooms of the required type
+    for (const Room& room : rooms) {
+        if (room.getType() == roomType) {
+            availableRooms.push_back(room.getID());
+        }
+    }
+
+    std::ifstream inFile("bookings.txt");
+    if (!inFile.is_open()) {
+        std::cerr << "Unable to open bookings.txt for reading!";
+        return availableRooms;  // Return whatever we have till now
+    }
+
+    std::string line;
+    while (std::getline(inFile, line)) {
+        std::stringstream ss(line);
+        std::string name, email, phone, rType, roomIdStr, bookedCheckIn, bookedCheckOut;
+
+        std::getline(ss, name, ',');
+        std::getline(ss, email, ',');
+        std::getline(ss, phone, ',');
+        std::getline(ss, rType, ',');
+        std::getline(ss, roomIdStr, ',');
+        std::getline(ss, bookedCheckIn, ',');
+        std::getline(ss, bookedCheckOut, ',');
+
+        if (rType == roomType) {
+            if (!((bookedCheckOut <= checkInDate) || (bookedCheckIn >= checkOutDate))) {
+                availableRooms.erase(std::remove(availableRooms.begin(), availableRooms.end(), std::stoi(roomIdStr)), availableRooms.end());
+            }
+        }
+    }
+
+    inFile.close();
+    return availableRooms;
+}
+

@@ -122,3 +122,35 @@ std::string promptForPhoneNumber() {
     return phone;
 }
 
+void searchForAvailableRooms(Hotel& hotel) {
+    clearScreen();
+
+    // 1. Nhập thông tin từ người dùng
+    std::string checkInDate, checkOutDate, roomType;
+
+    std::cout << "Please enter your desired check-in date (e.g., YYYY-MM-DD): ";
+    std::getline(std::cin, checkInDate);
+
+    std::cout << "Please enter your desired check-out date (e.g., YYYY-MM-DD): ";
+    std::getline(std::cin, checkOutDate);
+
+    std::cout << "Please enter room type (Single/Double): ";
+    std::getline(std::cin, roomType);
+
+    // 2. Gọi hàm `searchAvailableRooms` để tìm các phòng trống.
+    std::vector<int> availableRoomIDs = hotel.searchAvailableRooms(checkInDate, checkOutDate, roomType);
+
+    // 3. Hiển thị các phòng trống hoặc thông báo nếu không có phòng trống.
+    if (availableRoomIDs.empty()) {
+        std::cout << "Sorry, no rooms available for the given dates and room type.\n";
+    }
+    else {
+        std::cout << "Available rooms for the given dates and room type are: \n";
+        for (int id : availableRoomIDs) {
+            std::cout << "Room ID: " << id << "\n";
+        }
+    }
+
+    std::cout << "Press any key to continue...";
+    std::cin.get();
+}

@@ -15,7 +15,7 @@ void handleHotelOperations() {
             clearScreen();
             std::cout << "1. Book a room\n";
             std::cout << "2. Show all rooms\n";
-            //std::cout << "3. Search for customer by room ID\n";
+            std::cout << "3. Search for available room \n";
             std::cout << "0. Exit\n";
             std::cout << "Enter your choice: ";
             std::cin >> choice;
@@ -76,7 +76,9 @@ void handleHotelOperations() {
                 std::cin.ignore();
                 std::cin.get();  
                 break;
-
+            case '3':
+                searchForAvailableRooms(hotel);
+                break;
             /*case '3':
                 if (authenticateEmployee()) {
                     hotel.searchCustomerByRoomIdFromFile();
