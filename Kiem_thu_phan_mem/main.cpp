@@ -5,9 +5,8 @@
 #include "UsersManagement.h"
 #include <thread>
 
-void handleHotelOperations(UserManager& userManager){
-    Hotel hotel;
-    hotel.loadHotelData("hotel_data.txt");
+void handleHotelOperations(Hotel& hotel,UserManager& userManager){
+
 
      char choice;
      do {
@@ -82,6 +81,7 @@ void handleHotelOperations(UserManager& userManager){
 
 
 int main() {
+    Hotel hotel;
     UserManager userManager;
     char userChoice;
 
@@ -97,7 +97,7 @@ int main() {
         switch (userChoice) {
         case '1':
             if (userManager.loginCustomer()) {
-                handleHotelOperations(userManager);
+                handleHotelOperations(hotel,userManager);
             }
             else {
                 std::cout << "Login failed. Try again.\n";
@@ -114,6 +114,7 @@ int main() {
             break;
 
         case '3':
+            //hotel.saveHotelData("hotel_data.txt");
             return 0;
 
         default:
@@ -121,6 +122,7 @@ int main() {
             break;
         }
     } while (true);
+    //hotel.saveHotelData("hotel_data.txt");
 
     return 0;
 }

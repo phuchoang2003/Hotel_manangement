@@ -12,20 +12,25 @@
 
 
 Hotel::Hotel() {
-    double singleRoomPrice = 100.00;
-    double doubleRoomPrice = 150.00;
-    int roomId = 1;
-    for (int i = 0; i < 10; ++i) {
-        rooms.push_back(Room(roomId, "Single", singleRoomPrice));
-        roomId++;
-    }
-
-    for (int i = 0; i < 10; ++i) {
-        rooms.push_back(Room(roomId, "Double", doubleRoomPrice));
-        roomId++;
-    }
     loadHotelData("hotel_data.txt");
+    
+    // Kiểm tra nếu không có dữ liệu phòng từ tệp
+    if (rooms.empty()) {
+        double singleRoomPrice = 100.00;
+        double doubleRoomPrice = 150.00;
+        int roomId = 1;
+        for (int i = 0; i < 10; ++i) {
+            rooms.push_back(Room(roomId, "Single", singleRoomPrice));
+            roomId++;
+        }
+
+        for (int i = 0; i < 10; ++i) {
+            rooms.push_back(Room(roomId, "Double", doubleRoomPrice));
+            roomId++;
+        }
+    }
 }
+
 
 
 
@@ -51,7 +56,7 @@ bool Hotel::bookRoom(const std::string& roomType) {
 
 void Hotel::showAllRooms() { 
         clearScreen();
-
+        this->loadHotelData("hotel_data.txt");
         int bookedRooms = 0;
         int availableRooms = 0;
 
@@ -302,7 +307,7 @@ Booking Hotel::gatherAndBookRoom() {
     Room* chosenRoom = getRoomById(roomId);
     if (!chosenRoom) {
         std::cerr << "Error: Could not retrieve room details. Exiting..." << std::endl;
-        exit(1); // This will exit the program. If you don't want that, you can handle this error in some other way.
+        exit(1);
     }
 
     return Booking(customer, chosenRoom, check_in_date, check_out_date);
@@ -311,31 +316,40 @@ Booking Hotel::gatherAndBookRoom() {
 
 bool Hotel::finalizeBookingAndPayment(const Booking& booking, UserManager* userManager) {
     int roomId = booking.getRoom()->getID();
-    bookRoomById(roomId);
+
+    // "Đặt" phòng trước khi tiến hành thanh toán
+    Room* roomToBook = getRoomById(roomId);
+    if (roomToBook) {
+        roomToBook->setBookingStatus("Booked");
+        saveHotelData("hotel_data.txt");
+    }
 
     bool paymentSuccess = finalizePayment(roomId, booking.getCheckInDate(), booking.getCheckOutDate(), userManager, booking.getCustomer());
+
     if (paymentSuccess) {
         this->confirmBookingToCustomer(booking.getCustomer());
-        std::cin.ignore();
-        std::cin.get();
-        booking.saveToFile();  // Chỉ lưu thông tin đặt phòng khi thanh toán thành công
-        saveHotelData("hotel_data.txt");
+        booking.saveToFile();
         return true;
     }
     else {
         std::cout << "Sorry, the booking process was not successful. Please try again." << std::endl;
+
+        // "Huỷ" việc đặt phòng và cập nhật tệp
+        if (roomToBook) {
+            roomToBook->setBookingStatus("Available");
+            saveHotelData("hotel_data.txt");
+        }
+
         return false;
     }
 }
+
 
 
 bool Hotel::finalizePayment(int roomId, const std::string& check_in_date, const std::string& check_out_date, UserManager* userManager, Customer customer) {
     bool paymentSuccess = this->processPayment(roomId, check_in_date, check_out_date, userManager);
 
     if (paymentSuccess) {
-        /* this->confirmBookingToCustomer(customer);
-         std::cin.ignore();
-         std::cin.get();*/
         return true;
     }
     else {
