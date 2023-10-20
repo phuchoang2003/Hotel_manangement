@@ -1,2 +1,2 @@
-HoangDinhPhuc,2003,9050
-1,2,0
+HoangDinhPhuc,2003,7750
+1,2,4300

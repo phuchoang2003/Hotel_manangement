@@ -149,6 +149,9 @@
     <ClInclude Include="User.h" />
     <ClInclude Include="UsersManagement.h" />
   </ItemGroup>
+  <ItemGroup>
+    <Text Include="hotel_data.txt" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

@@ -40,6 +40,7 @@ void handleHotelOperations(Hotel& hotel,UserManager& userManager){
                 searchForAvailableRooms(hotel);
                 break;
             case '4': {
+                clearScreen();
                 double amount;
                 std::cout << "Enter amount to deposit: ";
                 std::cin >> amount;
@@ -50,6 +51,7 @@ void handleHotelOperations(Hotel& hotel,UserManager& userManager){
                 break;
             }
             case '5': {
+                clearScreen();
                 double amount;
                 std::cout << "Enter amount to withdraw: ";
                 std::cin >> amount;
@@ -96,6 +98,7 @@ int main() {
 
         switch (userChoice) {
         case '1':
+            clearScreen();
             if (userManager.loginCustomer()) {
                 handleHotelOperations(hotel,userManager);
             }
@@ -107,6 +110,7 @@ int main() {
             break;
 
         case '2':
+            clearScreen();
             userManager.registerCustomer();
             std::cout << "Registration successful!\n";
             std::cin.ignore();
@@ -118,6 +122,7 @@ int main() {
             return 0;
 
         default:
+            clearScreen();
             std::cout << "Invalid choice! Try again.\n";
             break;
         }

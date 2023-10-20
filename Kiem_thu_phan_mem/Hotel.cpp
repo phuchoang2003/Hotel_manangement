@@ -12,10 +12,7 @@
 
 
 Hotel::Hotel() {
-    loadHotelData("hotel_data.txt");
-    
-    // Kiểm tra nếu không có dữ liệu phòng từ tệp
-    if (rooms.empty()) {
+    if (!loadHotelData("hotel_data.txt")) {
         double singleRoomPrice = 100.00;
         double doubleRoomPrice = 150.00;
         int roomId = 1;
@@ -28,8 +25,12 @@ Hotel::Hotel() {
             rooms.push_back(Room(roomId, "Double", doubleRoomPrice));
             roomId++;
         }
+
+        // Lưu dữ liệu vào file sau khi thêm phòng
+        saveHotelData("hotel_data.txt");
     }
 }
+
 
 
 
@@ -49,6 +50,7 @@ bool Hotel::bookRoom(const std::string& roomType) {
     Room* room = findAvailableRoom(roomType);
     if (room) {
         room->book();
+        saveHotelData("hotel_data.txt");  // Lưu trạng thái sau khi đặt phòng
         return true;
     }
     return false;
@@ -56,7 +58,6 @@ bool Hotel::bookRoom(const std::string& roomType) {
 
 void Hotel::showAllRooms() { 
         clearScreen();
-        this->loadHotelData("hotel_data.txt");
         int bookedRooms = 0;
         int availableRooms = 0;
 
@@ -142,6 +143,7 @@ void Hotel::bookRoomById(int roomId) {
     for (Room& room : rooms) {
         if (room.getID() == roomId && room.available()) {
             room.book();
+            saveHotelData("hotel_data.txt");  // Lưu trạng thái sau khi đặt phòng
             break;
         }
     }
@@ -159,14 +161,19 @@ Room* Hotel::getRoomById(int roomId) {
 
 
 
-void Hotel::loadHotelData(const std::string& filename) {
+bool Hotel::loadHotelData(const std::string& filename) {
     std::ifstream file(filename);
     if (!file.is_open()) {
         std::cerr << "Unable to open file for reading!";
-        return;
+        return false;
     }
 
-    rooms.clear();  // clear the existing data
+    if (file.peek() == std::ifstream::traits_type::eof()) {
+        // File trống
+        return false;
+    }
+
+    rooms.clear();
 
     std::string line;
     while (std::getline(file, line)) {
@@ -175,17 +182,27 @@ void Hotel::loadHotelData(const std::string& filename) {
         double price;
         std::getline(ss, id_str, ',');
         std::getline(ss, type, ',');
-        ss >> price;  // Read the price
+        ss >> price;
         std::getline(ss, status, ',');
         int id = std::stoi(id_str);
-        Room room(id, type, price);  // updated with price
+        Room room(id, type, price);
         room.setBookingStatus(status);
         rooms.push_back(room);
     }
     file.close();
+    return true;
 }
 
+
 void Hotel::saveHotelData(const std::string& filename) {
+    // Kiểm tra sự tồn tại của tệp
+    std::ifstream checkFile(filename);
+    if (!checkFile.good()) {
+        std::cerr << "File does not exist!";
+        return;
+    }
+    checkFile.close();
+
     std::ofstream file(filename);
     if (!file.is_open()) {
         std::cerr << "Unable to open file for writing!";
@@ -201,6 +218,7 @@ void Hotel::saveHotelData(const std::string& filename) {
 
     file.close();
 }
+
 
 
 \
@@ -329,9 +347,12 @@ bool Hotel::finalizeBookingAndPayment(const Booking& booking, UserManager* userM
     if (paymentSuccess) {
         this->confirmBookingToCustomer(booking.getCustomer());
         booking.saveToFile();
+        std::cin.ignore();
+        std::cin.get();
         return true;
     }
     else {
+        clearScreen();
         std::cout << "Sorry, the booking process was not successful. Please try again." << std::endl;
 
         // "Huỷ" việc đặt phòng và cập nhật tệp
@@ -353,6 +374,7 @@ bool Hotel::finalizePayment(int roomId, const std::string& check_in_date, const 
         return true;
     }
     else {
+        clearScreen();
         std::cout << "Booking cancelled as payment was not processed." << std::endl;
         std::cin.ignore();
         std::cin.get();
@@ -379,15 +401,18 @@ bool Hotel::processPayment(int roomId, const std::string& checkInDate, const std
         bool paymentSuccess = userManager->withdrawFromLoggedInUser(totalAmount);
 
         if (paymentSuccess) {
+            clearScreen();
             for (int i = 0; i < 3; ++i) {
                 std::cout << "Processing payment" << std::string(i + 1, '.') << "\r";
                 std::cout.flush();
                 std::this_thread::sleep_for(std::chrono::seconds(1));
             }
+            clearScreen();
             std::cout << "Payment successful!    \n";
             return true;
         }
         else {
+            clearScreen();
             std::cout << "Payment failed! Check your balance or try again later.\n";
             return false;
         }

@@ -1,4 +1,4 @@
-1,Single,100,Available
+1,Single,100,Booked
 2,Single,100,Available
 3,Single,100,Available
 4,Single,100,Available
@@ -7,7 +7,7 @@
 7,Single,100,Available
 8,Single,100,Available
 9,Single,100,Available
-10,Single,100,Available
+10,Single,100,Booked
 11,Double,150,Available
 12,Double,150,Available
 13,Double,150,Available

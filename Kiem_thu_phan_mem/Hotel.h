@@ -42,7 +42,7 @@ public:
     
     
     // Data
-    void loadHotelData(const std::string& filename);
+    bool loadHotelData(const std::string& filename);
     void saveHotelData(const std::string& filename);
     
     
