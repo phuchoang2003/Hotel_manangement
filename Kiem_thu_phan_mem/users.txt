@@ -1,2 +1,4 @@
 HoangDinhPhuc,2003,7750
-1,2,4300
+1,1,0
+admin,admin,7550
+1,1,0

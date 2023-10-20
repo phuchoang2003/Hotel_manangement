@@ -319,12 +319,16 @@ Booking Hotel::gatherAndBookRoom() {
         }
         else {
             std::cout << "Sorry, the selected room is not available or invalid ID. Please try again." << std::endl;
+            std::cin.ignore();
+            std::cin.get();
         }
     } while (!validRoomId);
 
     Room* chosenRoom = getRoomById(roomId);
     if (!chosenRoom) {
         std::cerr << "Error: Could not retrieve room details. Exiting..." << std::endl;
+        std::cin.ignore();
+        std::cin.get();
         exit(1);
     }
 
@@ -352,8 +356,9 @@ bool Hotel::finalizeBookingAndPayment(const Booking& booking, UserManager* userM
         return true;
     }
     else {
-        clearScreen();
         std::cout << "Sorry, the booking process was not successful. Please try again." << std::endl;
+        std::cin.ignore();
+        std::cin.get();
 
         // "Huỷ" việc đặt phòng và cập nhật tệp
         if (roomToBook) {
@@ -374,7 +379,6 @@ bool Hotel::finalizePayment(int roomId, const std::string& check_in_date, const 
         return true;
     }
     else {
-        clearScreen();
         std::cout << "Booking cancelled as payment was not processed." << std::endl;
         std::cin.ignore();
         std::cin.get();
@@ -409,15 +413,28 @@ bool Hotel::processPayment(int roomId, const std::string& checkInDate, const std
             }
             clearScreen();
             std::cout << "Payment successful!    \n";
+            std::cin.ignore();
+            std::cin.get();
             return true;
         }
         else {
             clearScreen();
-            std::cout << "Payment failed! Check your balance or try again later.\n";
+            double userBalance = userManager->getBalanceOfLoggedInUser();  // giả sử bạn có một phương thức như thế này
+            if (userBalance < totalAmount) {
+                std::cout << "Payment failed! Your balance is $" << userBalance << " which is insufficient. Required amount is $" << totalAmount << ".\n";
+                std::cin.ignore();
+                std::cin.get();
+            }
+            else {
+                std::cout << "Payment failed! Check your account details or try again later.\n";
+                std::cin.ignore();
+                std::cin.get();
+            }
             return false;
         }
     }
     else {
         return false;
+    
     }
 }
