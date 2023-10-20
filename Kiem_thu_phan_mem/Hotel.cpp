@@ -7,37 +7,46 @@
 #include <sstream>
 #include <chrono>
 #include <thread>
+#include "UsersManagement.h"
 
 
-bool Hotel::processPayment(int roomId, const std::string& checkInDate, const std::string& checkOutDate) {
+bool Hotel::processPayment(int roomId, const std::string& checkInDate, const std::string& checkOutDate, UserManager* userManager) {
     int daysStayed = calculateDaysStayed(checkInDate, checkOutDate);
     const Room* desiredRoom = getRoomById(roomId);
     double roomPrice = desiredRoom->getPrice();
 
-    // Tính tổng tiền
+    
     double totalAmount = daysStayed * roomPrice;
 
-    // Hiển thị và xác nhận thanh toán
+  
     std::cout << "Total amount due for " << daysStayed << " day(s): $" << totalAmount << "\n";
 
     std::cout << "Would you like to proceed with the payment? (y/n): ";
-
     char paymentChoice;
     std::cin >> paymentChoice;
 
     if (paymentChoice == 'y' || paymentChoice == 'Y') {
-        for (int i = 0; i < 3; ++i) {
-            std::cout << "Processing payment" << std::string(i + 1, '.') << "\r";
-            std::cout.flush();
-            std::this_thread::sleep_for(std::chrono::seconds(1));
+        bool paymentSuccess = userManager->withdrawFromLoggedInUser(totalAmount);
+
+        if (paymentSuccess) {
+            for (int i = 0; i < 3; ++i) {
+                std::cout << "Processing payment" << std::string(i + 1, '.') << "\r";
+                std::cout.flush();
+                std::this_thread::sleep_for(std::chrono::seconds(1));
+            }
+            std::cout << "Payment successful!    \n";
+            return true; 
         }
-        std::cout << "Payment successful!    \n";
-        return true;  // Trả về true nếu thanh toán thành công
+        else {
+            std::cout << "Payment failed! Check your balance or try again later.\n";
+            return false; 
+        }
     }
     else {
-        return false;  // Trả về false nếu không thanh toán
+        return false;  
     }
 }
+
 
 
 
@@ -300,4 +309,21 @@ void Hotel::confirmBookingToCustomer(const Customer& customer) {
     std::cout << "Your booking has been confirmed!\n";
     std::cout << "-------------------------------------------\n";
     std::cin.get();
+}
+
+
+
+void Hotel::finalizePayment(int roomId, const std::string& check_in_date, const std::string& check_out_date, UserManager* userManager, Customer customer) {
+    bool paymentSuccess = this->processPayment(roomId, check_in_date, check_out_date, userManager);
+
+    if (paymentSuccess) {
+        this->confirmBookingToCustomer(customer);
+        std::cin.ignore();
+        std::cin.get();
+    }
+    else {
+        std::cout << "Booking cancelled as payment was not processed." << std::endl;
+        std::cin.ignore();
+        std::cin.get();
+    }
 }

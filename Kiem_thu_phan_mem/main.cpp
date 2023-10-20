@@ -4,7 +4,7 @@
 #include "main_functions.h"
 #include "UsersManagement.h"
 
-void handleHotelOperations() {
+void handleHotelOperations(UserManager& userManager){
     Hotel hotel;
     hotel.loadHotelData("hotel_data.txt");
 
@@ -14,6 +14,8 @@ void handleHotelOperations() {
             std::cout << "1. Book a room\n";
             std::cout << "2. Show all rooms\n";
             std::cout << "3. Search for available room \n";
+            std::cout << "4. Deposit money\n";
+            std::cout << "5. Withdraw money\n";
             std::cout << "0. Exit\n";
             std::cout << "Enter your choice: ";
             std::cin >> choice;
@@ -67,16 +69,7 @@ void handleHotelOperations() {
                 } while (!validRoomId);
 
                 // Tích hợp thanh toán vào đoạn này
-                bool paymentSuccess = hotel.processPayment(roomId, check_in_date, check_out_date);
-                if (paymentSuccess) {
-                    hotel.confirmBookingToCustomer(customer);
-                }
-                else {
-                    std::cout << "Booking cancelled as payment was not processed." << std::endl;
-                    std::cin.ignore();
-                    std::cin.get();
-                }
-
+                hotel.finalizePayment(roomId, check_in_date, check_out_date, &userManager, customer);
                 break;
             }
             case '2':
@@ -87,17 +80,26 @@ void handleHotelOperations() {
             case '3':
                 searchForAvailableRooms(hotel);
                 break;
-            /*case '3':
-                if (authenticateEmployee()) {
-                    hotel.searchCustomerByRoomIdFromFile();
-                }
-                else {
-                    clearScreen();
-                    std::cout << "Authentication failed. Access denied." << std::endl;
-                    std::cin.ignore();
-                    std::cin.get();
-                }
-                break;*/
+            case '4': {
+                double amount;
+                std::cout << "Enter amount to deposit: ";
+                std::cin >> amount;
+                std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');  // Xóa bộ đệm
+                userManager.depositToLoggedInUser(amount);
+                std::cin.ignore();
+                std::cin.get();
+                break;
+            }
+            case '5': {
+                double amount;
+                std::cout << "Enter amount to withdraw: ";
+                std::cin >> amount;
+                std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');  // Xóa bộ đệm
+                userManager.withdrawFromLoggedInUser(amount);
+                std::cin.ignore();
+                std::cin.get();
+                break;
+            }
             case '0':
                 hotel.saveHotelData("hotel_data.txt");
                 clearScreen();
@@ -133,7 +135,7 @@ int main() {
         switch (userChoice) {
         case '1':
             if (userManager.loginCustomer()) {
-                handleHotelOperations();
+                handleHotelOperations(userManager);
             }
             else {
                 std::cout << "Login failed. Try again.\n";

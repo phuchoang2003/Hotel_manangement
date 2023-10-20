@@ -135,6 +135,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="main_function.cpp" />
     <ClCompile Include="Room.cpp" />
+    <ClCompile Include="User.cpp" />
     <ClCompile Include="UsersManagement.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -145,6 +146,7 @@
     <ClInclude Include="Hotel.h" />
     <ClInclude Include="main_functions.h" />
     <ClInclude Include="Room.h" />
+    <ClInclude Include="User.h" />
     <ClInclude Include="UsersManagement.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
