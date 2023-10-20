@@ -2,8 +2,9 @@
 #include "User.h"
 #include <iostream>
 
-User::User(const std::string& userName, const std::string& password)
-: userName(userName) ,password(password), accountBalance(0.0) {}
+User::User(const std::string& userName, const std::string& password, const double& accountBalance)
+    : userName(userName), password(password), accountBalance(accountBalance) {}
+
 
 void User::deposit(double amount) {
     if (amount > 0) {
@@ -28,3 +29,12 @@ void User::withdraw(double amount) {
 double User::getBalance() const {
     return accountBalance;
 }
+
+std::string User::getUsername() const {
+    return userName;
+}
+
+std::string User::getPassword() const {
+    return password;
+}
+

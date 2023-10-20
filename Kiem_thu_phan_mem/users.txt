@@ -1,2 +1,1 @@
-HoangDinhPhuc,2003
-HoangDinhLoc,2000
+HoangDinhPhuc,2003,0

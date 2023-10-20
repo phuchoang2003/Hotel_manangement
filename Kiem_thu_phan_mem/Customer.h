@@ -16,10 +16,8 @@ public:
     std::string getName() const;
     std::string getEmail() const;
     std::string getPhone() const;
-    void saveToFile() const;
-   /* void withdraw(double amount);
-    double getBalance() const;
-    void deposit(double amount);*/
+    //void saveToFile() const;
+
 };
 
 #endif // CUSTOMER_H

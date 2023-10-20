@@ -17,17 +17,5 @@ std::string Customer::getPhone() const {
     return phone;
 }
 
-void Customer::saveToFile() const {
-    std::ofstream outFile("customers.txt", std::ios::app); // append mode
-    if (outFile.is_open()) {
-        outFile << getName() << ","
-            << getEmail() << ","
-            << getPhone() << ",";
-            //<< getBalance() << "\n";  // if you want to save accountBalance
-        outFile.close();
-    }
-    else {
-        std::cerr << "Unable to open file for writing!";
-    }
-}
+
 

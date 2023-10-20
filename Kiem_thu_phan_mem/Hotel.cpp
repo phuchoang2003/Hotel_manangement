@@ -65,6 +65,7 @@ Hotel::Hotel() {
         rooms.push_back(Room(roomId, "Double", doubleRoomPrice));
         roomId++;
     }
+    loadHotelData("hotel_data.txt");
 }
 
 
@@ -313,17 +314,23 @@ void Hotel::confirmBookingToCustomer(const Customer& customer) {
 
 
 
-void Hotel::finalizePayment(int roomId, const std::string& check_in_date, const std::string& check_out_date, UserManager* userManager, Customer customer) {
+bool Hotel::finalizePayment(int roomId, const std::string& check_in_date, const std::string& check_out_date, UserManager* userManager, Customer customer) {
     bool paymentSuccess = this->processPayment(roomId, check_in_date, check_out_date, userManager);
 
     if (paymentSuccess) {
         this->confirmBookingToCustomer(customer);
         std::cin.ignore();
         std::cin.get();
+        return true;
     }
     else {
         std::cout << "Booking cancelled as payment was not processed." << std::endl;
         std::cin.ignore();
         std::cin.get();
+        return false;
     }
 }
+
+
+
+

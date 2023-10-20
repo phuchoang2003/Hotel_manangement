@@ -2,6 +2,13 @@
 #include <fstream>
 #include <sstream> 
 #include "UsersManagement.h"
+#include <vector>
+
+
+UserManager::~UserManager() {
+    logout();
+}
+
 
 void UserManager::registerCustomer() {
     std::string username, password;
@@ -14,7 +21,7 @@ void UserManager::registerCustomer() {
 
     std::ofstream outFile(usersFile, std::ios::app);
     if (outFile.is_open()) {
-        outFile << username << "," << password << "\n";
+        outFile << username << "," << password << ",0.0" << "\n"; 
         outFile.close();
     }
     else {
@@ -23,7 +30,7 @@ void UserManager::registerCustomer() {
 }
 
 bool UserManager::loginCustomer() {
-    std::string username, password, line, storedUsername, storedPassword;
+    std::string username, password, line, storedUsername, storedPassword, balanceStr;
 
     std::cout << "Login as a customer:\n";
     std::cout << "Enter username: ";
@@ -36,14 +43,17 @@ bool UserManager::loginCustomer() {
         while (getline(inFile, line)) {
             std::istringstream iss(line);
             getline(iss, storedUsername, ',');
-            getline(iss, storedPassword);
+            getline(iss, storedPassword, ',');
+            getline(iss, balanceStr);
 
             if (storedUsername == username && storedPassword == password) {
                 std::cout << "Login successful!\n";
                 if (loggedInUser) {
+                    saveLoggedInUserInfo();
                     delete loggedInUser;
                 }
-                loggedInUser = new User(username, password);
+                double balance = std::stod(balanceStr);  // Convert string to double
+                loggedInUser = new User(username, password, balance);
                 return true;
             }
         }
@@ -56,10 +66,10 @@ bool UserManager::loginCustomer() {
     return false;
 }
 
-
 void UserManager::depositToLoggedInUser(double amount) {
     if (loggedInUser) {
         loggedInUser->deposit(amount);
+        saveLoggedInUserInfo();
         // TODO: Cập nhật thông tin người dùng trong tệp hoặc cơ sở dữ liệu nếu cần
     }
     else {
@@ -71,6 +81,7 @@ bool UserManager::withdrawFromLoggedInUser(double amount) {
     if (loggedInUser) {
         if (loggedInUser->getBalance() >= amount) {
             loggedInUser->withdraw(amount);
+            saveLoggedInUserInfo();
             // TODO: Cập nhật thông tin người dùng trong tệp hoặc cơ sở dữ liệu nếu cần
             return true;
         }
@@ -96,3 +107,67 @@ double UserManager::getBalanceOfLoggedInUser() const {
     }
 }
 
+
+std::string UserManager::getLoggedInUsername() const {
+    if (loggedInUser) {
+        return loggedInUser->getUsername();  // Bạn cần thêm phương thức getUsername() cho lớp User
+    }
+    return "";
+}
+
+double UserManager::getLoggedInUserBalance() const {
+    if (loggedInUser) {
+        return loggedInUser->getBalance();
+    }
+    return 0.0;  // hoặc trả về một giá trị không hợp lệ nào đó
+}
+
+bool UserManager::isUserLoggedIn() const {
+    return loggedInUser != nullptr;
+}
+
+
+
+
+
+void UserManager::saveLoggedInUserInfo() {
+    std::vector<std::string> fileLines;
+    std::ifstream inFile(usersFile);
+    std::string line;
+
+    if (inFile.is_open()) {
+        while (getline(inFile, line)) {
+            std::istringstream iss(line);                    
+
+            std::string storedUsername;
+            getline(iss, storedUsername, ',');
+            if(storedUsername == loggedInUser->getUsername()) {
+                std::ostringstream oss;
+                oss << loggedInUser->getUsername() << ","
+                    << loggedInUser->getPassword() << ","
+                    << loggedInUser->getBalance();
+                fileLines.push_back(oss.str());
+            }
+            else {
+                fileLines.push_back(line);
+            }
+        }
+        inFile.close();
+    }
+
+    // Ghi lại nội dung file với thông tin người dùng cập nhật
+    std::ofstream outFile(usersFile);
+    for (const auto& line : fileLines) {
+        outFile << line << "\n";
+    }
+    outFile.close();
+}
+
+
+void UserManager::logout() {
+    if (loggedInUser) {
+        saveLoggedInUserInfo();
+        delete loggedInUser;
+        loggedInUser = nullptr;
+    }
+}

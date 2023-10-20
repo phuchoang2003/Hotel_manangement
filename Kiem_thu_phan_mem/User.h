@@ -8,10 +8,15 @@ private:
     double accountBalance;
 
 public:
-    User(const std::string& userName, const std::string& password);
+    User(const std::string& userName, const std::string& password, const double& accountBalance);
 
 
     void deposit(double amount);
     void withdraw(double amount);
+    std::string getUsername() const;
+    std::string getPassword() const;
     double getBalance() const;
 };
+
+
+

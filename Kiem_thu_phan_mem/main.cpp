@@ -3,6 +3,7 @@
 #include "Booking.h"
 #include "main_functions.h"
 #include "UsersManagement.h"
+#include <thread>
 
 void handleHotelOperations(UserManager& userManager){
     Hotel hotel;
@@ -16,7 +17,7 @@ void handleHotelOperations(UserManager& userManager){
             std::cout << "3. Search for available room \n";
             std::cout << "4. Deposit money\n";
             std::cout << "5. Withdraw money\n";
-            std::cout << "0. Exit\n";
+            std::cout << "0. Logout\n";
             std::cout << "Enter your choice: ";
             std::cin >> choice;
             std::cin.ignore();
@@ -32,7 +33,6 @@ void handleHotelOperations(UserManager& userManager){
                 promptForValidDates(check_in_date, check_out_date);
 
                 Customer customer(customer_name, customer_email, customer_phone);
-                customer.saveToFile();
 
                 //std::string room_type = promptForRoomType();
 
@@ -53,11 +53,16 @@ void handleHotelOperations(UserManager& userManager){
                         const Room* desiredRoom = hotel.getRoomById(roomId);
 
                         if (desiredRoom->getType() == chosenRoomType) {
-                            hotel.bookRoomById(roomId);
+                            hotel.bookRoomById(roomId);  // Đặt phòng nhưng chưa lưu vào file
                             Booking booking(customer, desiredRoom, check_in_date, check_out_date);
-                            booking.saveToFile();
-                            hotel.saveHotelData("hotel_data.txt");
-                            validRoomId = true;
+
+                            // Tích hợp thanh toán vào đoạn này
+                            bool paymentSuccess = hotel.finalizePayment(roomId, check_in_date, check_out_date, &userManager, customer);
+                            if (paymentSuccess) {
+                                booking.saveToFile();  // Lưu thông tin đặt phòng sau khi thanh toán thành công
+                                hotel.saveHotelData("hotel_data.txt");  // Lưu trạng thái của phòng sau khi thanh toán thành công
+                            }
+                            break;
                         }
                         else {
                             std::cout << "The room ID does not match the selected room type. Please try again." << std::endl;
@@ -67,9 +72,6 @@ void handleHotelOperations(UserManager& userManager){
                         std::cout << "Sorry, the selected room is not available or invalid ID. Please try again." << std::endl;
                     }
                 } while (!validRoomId);
-
-                // Tích hợp thanh toán vào đoạn này
-                hotel.finalizePayment(roomId, check_in_date, check_out_date, &userManager, customer);
                 break;
             }
             case '2':
@@ -100,11 +102,14 @@ void handleHotelOperations(UserManager& userManager){
                 std::cin.get();
                 break;
             }
+            
             case '0':
                 hotel.saveHotelData("hotel_data.txt");
+                userManager.logout();  // Đảm bảo rằng bạn đã thêm phương thức này vào class UserManager như đã được đề cập ở trước.
                 clearScreen();
-                std::cout << "Thank you for using our system! Goodbye!\n";
-                break;
+                std::cout << "Logged out successfully! Returning to main menu...\n";
+                std::this_thread::sleep_for(std::chrono::seconds(2));  // Pause for a short time before returning
+                return;
             default:
                 clearScreen();
                 std::cout << "Invalid choice! Try again.\n";
