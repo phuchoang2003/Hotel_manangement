@@ -25,53 +25,11 @@ void handleHotelOperations(UserManager& userManager){
             switch (choice) {
             case '1': {
                 clearScreen();
-                std::string customer_name = promptForName();
-                std::string customer_email = promptForValidGmail();
-                std::string customer_phone = promptForPhoneNumber();
-
-                std::string check_in_date, check_out_date;
-                promptForValidDates(check_in_date, check_out_date);
-
-                Customer customer(customer_name, customer_email, customer_phone);
-
-                //std::string room_type = promptForRoomType();
-
-
-
-                std::string chosenRoomType = hotel.showAvailableRoomsOfType();
-                int roomId;
-                bool validRoomId = false;
-
-                do {
-                    std::cout << "Please enter the ID of the room you would like to book: ";
-                    std::cin >> roomId;
-
-                    // Xóa bộ đệm
-                    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-
-                    if (hotel.isRoomAvailable(roomId)) {
-                        const Room* desiredRoom = hotel.getRoomById(roomId);
-
-                        if (desiredRoom->getType() == chosenRoomType) {
-                            hotel.bookRoomById(roomId);  // Đặt phòng nhưng chưa lưu vào file
-                            Booking booking(customer, desiredRoom, check_in_date, check_out_date);
-
-                            // Tích hợp thanh toán vào đoạn này
-                            bool paymentSuccess = hotel.finalizePayment(roomId, check_in_date, check_out_date, &userManager, customer);
-                            if (paymentSuccess) {
-                                booking.saveToFile();  // Lưu thông tin đặt phòng sau khi thanh toán thành công
-                                hotel.saveHotelData("hotel_data.txt");  // Lưu trạng thái của phòng sau khi thanh toán thành công
-                            }
-                            break;
-                        }
-                        else {
-                            std::cout << "The room ID does not match the selected room type. Please try again." << std::endl;
-                        }
-                    }
-                    else {
-                        std::cout << "Sorry, the selected room is not available or invalid ID. Please try again." << std::endl;
-                    }
-                } while (!validRoomId);
+                Booking booking = hotel.gatherAndBookRoom();
+                bool success = hotel.finalizeBookingAndPayment(booking, &userManager);
+                if (!success) {
+                    std::cout << "Booking cancelled as payment was not processed." << std::endl;
+                }
                 break;
             }
             case '2':
@@ -96,7 +54,7 @@ void handleHotelOperations(UserManager& userManager){
                 double amount;
                 std::cout << "Enter amount to withdraw: ";
                 std::cin >> amount;
-                std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');  // Xóa bộ đệm
+                std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');  
                 userManager.withdrawFromLoggedInUser(amount);
                 std::cin.ignore();
                 std::cin.get();
@@ -105,22 +63,21 @@ void handleHotelOperations(UserManager& userManager){
             
             case '0':
                 hotel.saveHotelData("hotel_data.txt");
-                userManager.logout();  // Đảm bảo rằng bạn đã thêm phương thức này vào class UserManager như đã được đề cập ở trước.
+                userManager.logout();  
                 clearScreen();
                 std::cout << "Logged out successfully! Returning to main menu...\n";
-                std::this_thread::sleep_for(std::chrono::seconds(2));  // Pause for a short time before returning
+                std::this_thread::sleep_for(std::chrono::seconds(2));  
                 return;
             default:
                 clearScreen();
                 std::cout << "Invalid choice! Try again.\n";
                 std::cin.ignore();
-                std::cin.get();  // Pause for user to read the message
+                std::cin.get();  
                 break;
             }
         
     } while (choice != '0');  
 }
-
 
 
 
@@ -132,7 +89,7 @@ int main() {
         clearScreen();
         std::cout << "1. Login\n";
         std::cout << "2. Register\n";
-        std::cout << "3. Exit program\n";  // Rename to make it clear this exits the program
+        std::cout << "3. Exit program\n";  
         std::cout << "Enter your choice: ";
         std::cin >> userChoice;
         std::cin.ignore();

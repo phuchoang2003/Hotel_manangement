@@ -1,15 +1,14 @@
-// User.cpp
-#include "User.h"
+﻿#include "User.h"
 #include <iostream>
+#include <iomanip> 
 
 User::User(const std::string& userName, const std::string& password, const double& accountBalance)
     : userName(userName), password(password), accountBalance(accountBalance) {}
 
-
 void User::deposit(double amount) {
     if (amount > 0) {
         accountBalance += amount;
-        std::cout << "Deposited $" << amount << ". New balance: $" << accountBalance << std::endl;
+        std::cout << std::fixed << std::setprecision(2) << "Deposited $" << amount << ". New balance: $" << accountBalance << std::endl;
     }
     else {
         std::cout << "Invalid amount entered." << std::endl;
@@ -19,7 +18,7 @@ void User::deposit(double amount) {
 void User::withdraw(double amount) {
     if (amount > 0 && amount <= accountBalance) {
         accountBalance -= amount;
-        std::cout << "Withdrew $" << amount << ". Remaining balance: $" << accountBalance << std::endl;
+        std::cout << std::fixed << std::setprecision(2) << "Withdrew $" << amount << ". Remaining balance: $" << accountBalance << std::endl;
     }
     else {
         std::cout << "Invalid amount or insufficient funds." << std::endl;
@@ -37,4 +36,3 @@ std::string User::getUsername() const {
 std::string User::getPassword() const {
     return password;
 }
-

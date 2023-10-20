@@ -37,7 +37,7 @@ bool is_past_date(const std::string& date) {
     struct tm newyear;
     double seconds;
 
-    time(&now);  // Get the current time
+    time(&now);  
     newyear = *localtime(&now);
 
     int year, month, day;

@@ -8,48 +8,7 @@
 #include <chrono>
 #include <thread>
 #include "UsersManagement.h"
-
-
-bool Hotel::processPayment(int roomId, const std::string& checkInDate, const std::string& checkOutDate, UserManager* userManager) {
-    int daysStayed = calculateDaysStayed(checkInDate, checkOutDate);
-    const Room* desiredRoom = getRoomById(roomId);
-    double roomPrice = desiredRoom->getPrice();
-
-    
-    double totalAmount = daysStayed * roomPrice;
-
-  
-    std::cout << "Total amount due for " << daysStayed << " day(s): $" << totalAmount << "\n";
-
-    std::cout << "Would you like to proceed with the payment? (y/n): ";
-    char paymentChoice;
-    std::cin >> paymentChoice;
-
-    if (paymentChoice == 'y' || paymentChoice == 'Y') {
-        bool paymentSuccess = userManager->withdrawFromLoggedInUser(totalAmount);
-
-        if (paymentSuccess) {
-            for (int i = 0; i < 3; ++i) {
-                std::cout << "Processing payment" << std::string(i + 1, '.') << "\r";
-                std::cout.flush();
-                std::this_thread::sleep_for(std::chrono::seconds(1));
-            }
-            std::cout << "Payment successful!    \n";
-            return true; 
-        }
-        else {
-            std::cout << "Payment failed! Check your balance or try again later.\n";
-            return false; 
-        }
-    }
-    else {
-        return false;  
-    }
-}
-
-
-
-
+#include <iomanip>  
 
 
 Hotel::Hotel() {
@@ -183,14 +142,15 @@ void Hotel::bookRoomById(int roomId) {
     }
 }
 
-const Room* Hotel::getRoomById(int roomId) const {
-    for (const Room& room : rooms) {
+Room* Hotel::getRoomById(int roomId) {
+    for (Room& room : rooms) {
         if (room.getID() == roomId) {
             return &room;
         }
     }
     return nullptr;
 }
+
 
 
 
@@ -312,15 +272,70 @@ void Hotel::confirmBookingToCustomer(const Customer& customer) {
     std::cin.get();
 }
 
+Booking Hotel::gatherAndBookRoom() {
+    std::string customer_name = promptForName();
+    std::string customer_email = promptForValidGmail();
+    std::string customer_phone = promptForPhoneNumber();
+
+    std::string check_in_date, check_out_date;
+    promptForValidDates(check_in_date, check_out_date);
+
+    Customer customer(customer_name, customer_email, customer_phone);
+
+    std::string chosenRoomType = showAvailableRoomsOfType();
+    int roomId;
+    bool validRoomId = false;
+
+    do {
+        std::cout << "Please enter the ID of the room you would like to book: ";
+        std::cin >> roomId;
+        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+
+        if (isRoomAvailable(roomId)) {
+            validRoomId = true;
+        }
+        else {
+            std::cout << "Sorry, the selected room is not available or invalid ID. Please try again." << std::endl;
+        }
+    } while (!validRoomId);
+
+    Room* chosenRoom = getRoomById(roomId);
+    if (!chosenRoom) {
+        std::cerr << "Error: Could not retrieve room details. Exiting..." << std::endl;
+        exit(1); // This will exit the program. If you don't want that, you can handle this error in some other way.
+    }
+
+    return Booking(customer, chosenRoom, check_in_date, check_out_date);
+}
+
+
+bool Hotel::finalizeBookingAndPayment(const Booking& booking, UserManager* userManager) {
+    int roomId = booking.getRoom()->getID();
+    bookRoomById(roomId);
+
+    bool paymentSuccess = finalizePayment(roomId, booking.getCheckInDate(), booking.getCheckOutDate(), userManager, booking.getCustomer());
+    if (paymentSuccess) {
+        this->confirmBookingToCustomer(booking.getCustomer());
+        std::cin.ignore();
+        std::cin.get();
+        booking.saveToFile();  // Chỉ lưu thông tin đặt phòng khi thanh toán thành công
+        saveHotelData("hotel_data.txt");
+        return true;
+    }
+    else {
+        std::cout << "Sorry, the booking process was not successful. Please try again." << std::endl;
+        return false;
+    }
+}
 
 
 bool Hotel::finalizePayment(int roomId, const std::string& check_in_date, const std::string& check_out_date, UserManager* userManager, Customer customer) {
     bool paymentSuccess = this->processPayment(roomId, check_in_date, check_out_date, userManager);
 
     if (paymentSuccess) {
-        this->confirmBookingToCustomer(customer);
-        std::cin.ignore();
-        std::cin.get();
+        /* this->confirmBookingToCustomer(customer);
+         std::cin.ignore();
+         std::cin.get();*/
         return true;
     }
     else {
@@ -332,5 +347,38 @@ bool Hotel::finalizePayment(int roomId, const std::string& check_in_date, const 
 }
 
 
+bool Hotel::processPayment(int roomId, const std::string& checkInDate, const std::string& checkOutDate, UserManager* userManager) {
+    int daysStayed = calculateDaysStayed(checkInDate, checkOutDate);
+    const Room* desiredRoom = getRoomById(roomId);
+    double roomPrice = desiredRoom->getPrice();
 
+    double totalAmount = daysStayed * roomPrice;
 
+    std::cout << std::fixed << std::setprecision(2);
+    std::cout << "Total amount due for " << daysStayed << " day(s): $" << totalAmount << "\n";
+
+    std::cout << "Would you like to proceed with the payment? (y/n): ";
+    char paymentChoice;
+    std::cin >> paymentChoice;
+
+    if (paymentChoice == 'y' || paymentChoice == 'Y') {
+        bool paymentSuccess = userManager->withdrawFromLoggedInUser(totalAmount);
+
+        if (paymentSuccess) {
+            for (int i = 0; i < 3; ++i) {
+                std::cout << "Processing payment" << std::string(i + 1, '.') << "\r";
+                std::cout.flush();
+                std::this_thread::sleep_for(std::chrono::seconds(1));
+            }
+            std::cout << "Payment successful!    \n";
+            return true;
+        }
+        else {
+            std::cout << "Payment failed! Check your balance or try again later.\n";
+            return false;
+        }
+    }
+    else {
+        return false;
+    }
+}
