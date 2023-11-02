@@ -78,16 +78,22 @@ void promptForValidDates(std::string& check_in_date, std::string& check_out_date
 
         if (!is_valid_date_format(check_in_date) || !is_valid_date_format(check_out_date)) {
             std::cout << "Invalid date format. Please try again." << std::endl;
+            std::cin.ignore();
+            std::cin.get();
             continue;
         }
 
         if (!is_valid_date_range(check_in_date, check_out_date)) {
             std::cout << "Check-out date cannot be before check-in date. Please try again." << std::endl;
+            std::cin.ignore();
+            std::cin.get();
             continue;
         }
 
         if (is_past_date(check_in_date)) {
             std::cout << "Check-in date cannot be in the past. Please try again." << std::endl;
+            std::cin.ignore();
+            std::cin.get();
             continue;
         }
 

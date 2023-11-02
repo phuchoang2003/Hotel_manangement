@@ -16,7 +16,7 @@ public:
     double getSingleRoomPrice() const;
     double getDoubleRoomPrice() const;
     Room* getRoomById(int roomId)  ;
-    bool isRoomAvailable(int roomId) const;
+    bool isRoomAvailable(int roomId, const std::string& roomType) const;
     
     
     //book

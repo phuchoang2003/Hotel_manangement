@@ -130,9 +130,9 @@ std::string Hotel::showAvailableRoomsOfType() {
 
 
 
-bool Hotel::isRoomAvailable(int roomId) const {
+bool Hotel::isRoomAvailable(int roomId, const std::string& roomType) const {
     for (const Room& room : rooms) {
-        if (room.getID() == roomId && room.available()) {
+        if (room.getID() == roomId && room.available() && room.getType() == roomType) {
             return true;
         }
     }
@@ -221,7 +221,7 @@ void Hotel::saveHotelData(const std::string& filename) {
 
 
 
-\
+
 
 std::vector<int> Hotel::searchAvailableRooms(const std::string& checkInDate, const std::string& checkOutDate, const std::string& roomType, double minPrice,
     double maxPrice) {
@@ -314,7 +314,7 @@ Booking Hotel::gatherAndBookRoom() {
         std::cin >> roomId;
         std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 
-        if (isRoomAvailable(roomId)) {
+        if (isRoomAvailable(roomId, chosenRoomType)) {
             validRoomId = true;
         }
         else {
@@ -323,6 +323,7 @@ Booking Hotel::gatherAndBookRoom() {
             std::cin.get();
         }
     } while (!validRoomId);
+
 
     Room* chosenRoom = getRoomById(roomId);
     if (!chosenRoom) {
@@ -419,7 +420,7 @@ bool Hotel::processPayment(int roomId, const std::string& checkInDate, const std
         }
         else {
             clearScreen();
-            double userBalance = userManager->getBalanceOfLoggedInUser();  // giả sử bạn có một phương thức như thế này
+            double userBalance = userManager->getBalanceOfLoggedInUser();  
             if (userBalance < totalAmount) {
                 std::cout << "Payment failed! Your balance is $" << userBalance << " which is insufficient. Required amount is $" << totalAmount << ".\n";
                 std::cin.ignore();
