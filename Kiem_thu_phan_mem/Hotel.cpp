@@ -376,16 +376,17 @@ bool Hotel::finalizeBookingAndPayment(const Booking& booking, UserManager* userM
 bool Hotel::finalizePayment(int roomId, const std::string& check_in_date, const std::string& check_out_date, UserManager* userManager, Customer customer) {
     bool paymentSuccess = this->processPayment(roomId, check_in_date, check_out_date, userManager);
 
-    if (paymentSuccess) {
-        return true;
-    }
-    else {
+    if (!paymentSuccess) {  // Thay đổi điều kiện ở đây
         std::cout << "Booking cancelled as payment was not processed." << std::endl;
         std::cin.ignore();
         std::cin.get();
         return false;
     }
+    else {  // Thay đổi điều kiện ở đây
+        return true;
+    }
 }
+
 
 
 bool Hotel::processPayment(int roomId, const std::string& checkInDate, const std::string& checkOutDate, UserManager* userManager) {

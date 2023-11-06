@@ -48,6 +48,8 @@ bool UserManager::loginCustomer() {
 
             if (storedUsername == username && storedPassword == password) {
                 std::cout << "Login successful!\n";
+                std::cin.ignore();
+                std::cin.get();
                 if (loggedInUser) {
                     saveLoggedInUserInfo();
                     delete loggedInUser;

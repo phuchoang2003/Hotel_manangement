@@ -11,7 +11,7 @@
 11,Double,150,Available
 12,Double,150,Available
 13,Double,150,Available
-14,Double,150,Booked
+14,Double,150,Available
 15,Double,150,Available
 16,Double,150,Available
 17,Double,150,Available
